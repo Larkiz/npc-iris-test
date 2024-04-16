@@ -2,7 +2,7 @@ import { ShopsModel } from "../models/ShopsModel.js";
 
 export const ShopsController = {
   get: async (req, res) => {
-    const offset = req.query.offset | 0;
+    const offset = req.query.offset || null;
 
     const data = await new ShopsModel().get(offset);
     return res.json(data);

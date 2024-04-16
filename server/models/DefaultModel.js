@@ -19,7 +19,7 @@ export class DefaultModel {
   async getById(id) {
     try {
       const data = await this.pgConn.query(
-        `SELECT * FROM ${this.tableName} where id = ${id}`
+        `SELECT * FROM ${this.tableName} where id = ${id} `
       );
       return data;
     } catch (error) {
@@ -28,10 +28,12 @@ export class DefaultModel {
   }
 
   async get(offset) {
+    let selectQuery = `SELECT * FROM ${this.tableName} order by id asc offset ${offset} limit 30`;
+    if (offset === null) {
+      selectQuery = `SELECT * FROM ${this.tableName} order by id asc `;
+    }
     try {
-      const data = await this.pgConn.query(
-        `SELECT * FROM ${this.tableName} offset ${offset} limit 30`
-      );
+      const data = await this.pgConn.query(selectQuery);
       return data;
     } catch (error) {
       console.error(error);

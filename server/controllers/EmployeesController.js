@@ -2,7 +2,7 @@ import { EmployeesModel } from "../models/EmployeesModel.js";
 
 export const EmployeesController = {
   get: async (req, res) => {
-    const offset = req.query.offset | 0;
+    const offset = req.query.offset || null;
 
     const data = await new EmployeesModel().get(offset);
     return res.json(data);
