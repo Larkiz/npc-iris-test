@@ -16,13 +16,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Nav } from "reactstrap";
 
 function Sidebar(props) {
   const location = useLocation();
-  const sidebar = React.useRef();
+  const sidebar = useRef();
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";

@@ -2,6 +2,10 @@ import { AgGridReact } from "ag-grid-react";
 import { useCallback, useRef, useState } from "react";
 import { getDataForInfinite } from "./functions/getInfiniteData";
 import { useForm } from "react-hook-form";
+import { useToasts } from "react-toast-notifications";
+import { AddNewBtn, addNew } from "./EmployeesControls/AddNewBtn.jsx";
+import { DeleteRowBtn } from "./EmployeesControls/DeleteRowBtn";
+import { EditBtn } from "./EmployeesControls/EditBtn";
 
 export const EmployeesTable = () => {
   const [colDef, setColDef] = useState([
@@ -27,8 +31,8 @@ export const EmployeesTable = () => {
       filter: "agNumberColumnFilter",
     },
   ]);
-
-  const [editData, setEdit] = useState({ status: false, data: {} });
+  const { addToast } = useToasts();
+  const [edit, setEdit] = useState(false);
 
   const gridRef = useRef();
 
@@ -44,101 +48,49 @@ export const EmployeesTable = () => {
     editable: true,
   };
 
-  function deleteRow() {
-    const selectedRows = gridRef.current.api.getSelectedRows()[0];
-    if (selectedRows) {
-      fetch(`http://localhost:5000/api/employees/${selectedRows.id}`, {
-        method: "DELETE",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          getDataForInfinite(gridRef);
-          console.log(data);
-        })
-        .catch(alert);
-    }
-  }
-  function startEdit(e) {
+  function startEdit() {
     const selectedRows = gridRef.current.api.getSelectedNodes()[0];
     if (selectedRows) {
-      setEdit({ status: true, data: selectedRows.data });
+      setEdit(true);
       gridRef.current.api.startEditingCell({
         rowIndex: selectedRows.rowIndex,
         colKey: "id",
       });
     }
   }
-  function saveEdit(action) {
-    const selectedRows = gridRef.current.api.getSelectedNodes()[0];
-    setEdit({ status: false, data: {} });
+
+  function stopEdit(refresh) {
+    setEdit(false);
     gridRef.current.api.stopEditing();
-    if (action !== "cancel") {
-      fetch(`http://localhost:5000/api/employees/${selectedRows.data.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(selectedRows.data),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.message) throw data.message;
-          alert(data.updatedId + " Обновлен");
-        })
-        .catch(alert);
+    if (refresh) {
+      refreshTable();
     }
-    setTimeout(() => getDataForInfinite(gridRef));
   }
 
-  function addNew(value) {
-    fetch(`http://localhost:5000/api/employees`, {
-      method: "post",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(value),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message) throw data.message;
-        alert("Добавлен под id " + data.insertedId);
+  function refreshTable() {
+    getDataForInfinite(gridRef);
+  }
 
-        getDataForInfinite(gridRef);
-      })
-      .catch(alert);
+  function getSelectedRow() {
+    return gridRef.current.api.getSelectedRows()[0];
   }
 
   return (
     <>
       <div>
-        {!editData.status ? (
-          <button className="btn-grid-control" onClick={startEdit}>
-            Изменить
-          </button>
-        ) : (
-          <>
-            <button
-              className="btn-grid-control"
-              onClick={() => {
-                saveEdit();
-              }}
-            >
-              Сохранить
-            </button>
-            <button
-              className="btn-grid-control"
-              onClick={() => {
-                saveEdit("cancel");
-              }}
-            >
-              Отменить
-            </button>
-          </>
-        )}
+        <EditBtn
+          addToast={addToast}
+          getSelectedRow={getSelectedRow}
+          startEdit={startEdit}
+          stopEdit={stopEdit}
+          edit={edit}
+        />
+        <DeleteRowBtn
+          addToast={addToast}
+          refreshTable={refreshTable}
+          getSelectedRow={getSelectedRow}
+        />
 
-        <button className="btn-grid-control" onClick={deleteRow}>
-          Удалить
-        </button>
         <div className="grid-add-new">
           <input {...register("name")} placeholder="Имя" type="text" />
           <input {...register("salary")} placeholder="Зарплата" type="text" />
@@ -152,12 +104,11 @@ export const EmployeesTable = () => {
             placeholder="Id магазина"
             type="text"
           />
-          <button
-            className="btn-grid-control"
-            onClick={handleSubmit((value) => addNew(value))}
-          >
-            Добавить
-          </button>
+          <AddNewBtn
+            addToast={addToast}
+            refreshTable={refreshTable}
+            handleSubmit={handleSubmit}
+          />
         </div>
       </div>
       <AgGridReact
@@ -173,11 +124,9 @@ export const EmployeesTable = () => {
         maxConcurrentDatasourceRequests={1}
         maxBlocksInCache={10}
         onGridReady={onGridReady}
-        onRowValueChanging={console.log}
-        suppressRowClickSelection={!editData.action ? false : true}
-        stopEditingWhenCellsLoseFocus
+        // stopEditingWhenCellsLoseFocus
         onRowEditingStopped={() => {
-          saveEdit("cancel");
+          stopEdit(true);
         }}
         suppressClickEdit
       />

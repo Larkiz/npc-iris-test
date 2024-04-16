@@ -18,17 +18,16 @@
 */
 import React from "react";
 
-// reactstrap components
-
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 
 import { ShopsTable } from "components/tables/ShopsTable";
 import { EmployeesTable } from "components/tables/EmployeesTable";
+import { ToastProvider } from "react-toast-notifications";
 
 function Tables() {
   return (
-    <>
+    <ToastProvider>
       <div className="content ">
         <div className="tables">
           <div
@@ -49,7 +48,7 @@ function Tables() {
           </div>
         </div>
       </div>
-    </>
+    </ToastProvider>
   );
 }
 
