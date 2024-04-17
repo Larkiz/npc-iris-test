@@ -8,18 +8,20 @@ export const useFetchTable = (tableName) => {
   }, []);
 
   const fetchMore = () => {
-    fetch(`http://localhost:5000/api/${tableName}?offset=${tableData.offset}`)
-      .then((res) => res.json())
-      .then((resData) => {
-        if (resData.message) throw resData.message;
-        setTableData((prev) => {
-          return {
-            offset: prev.offset + 30,
-            data: [...prev.data, ...resData],
-          };
-        });
-      })
-      .catch(console.log);
+    if (tableData.data.length % 30 === 0) {
+      fetch(`http://localhost:5000/api/${tableName}?offset=${tableData.offset}`)
+        .then((res) => res.json())
+        .then((resData) => {
+          if (resData.message) throw resData.message;
+          setTableData((prev) => {
+            return {
+              offset: prev.offset + 30,
+              data: [...prev.data, ...resData],
+            };
+          });
+        })
+        .catch(console.log);
+    }
   };
 
   return [tableData.data, fetchMore];

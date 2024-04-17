@@ -3,34 +3,41 @@ import { useCallback, useRef, useState } from "react";
 import { getDataForInfinite } from "./functions/getInfiniteData";
 import { useForm } from "react-hook-form";
 import { useToasts } from "react-toast-notifications";
-import { AddNewBtn, addNew } from "./EmployeesControls/AddNewBtn.jsx";
+import { AddNewBtn } from "./EmployeesControls/AddNewBtn.jsx";
 import { DeleteRowBtn } from "./EmployeesControls/DeleteRowBtn";
 import { EditBtn } from "./EmployeesControls/EditBtn";
+import { saveEdit } from "./functions/saveEdit";
+
+const defaultColDef = {
+  filter: "agTextColumnFilter",
+  floatingFilter: true,
+  editable: true,
+};
+const colDef = [
+  {
+    field: "id",
+    maxWidth: 100,
+    editable: false,
+    filter: "agNumberColumnFilter",
+  },
+  { field: "name", flex: 2 },
+  {
+    field: "salary",
+
+    filter: "agNumberColumnFilter",
+  },
+  {
+    field: "employment_date",
+    filter: "agSetColumnFilter",
+    editable: false,
+  },
+  {
+    field: "shop_id",
+    filter: "agNumberColumnFilter",
+  },
+];
 
 export const EmployeesTable = () => {
-  const [colDef, setColDef] = useState([
-    {
-      field: "id",
-      maxWidth: 100,
-      editable: false,
-      filter: "agNumberColumnFilter",
-    },
-    { field: "name", flex: 2 },
-    {
-      field: "salary",
-
-      filter: "agNumberColumnFilter",
-    },
-    {
-      field: "employment_date",
-      filter: "agSetColumnFilter",
-      editable: false,
-    },
-    {
-      field: "shop_id",
-      filter: "agNumberColumnFilter",
-    },
-  ]);
   const { addToast } = useToasts();
   const [edit, setEdit] = useState(false);
 
@@ -42,12 +49,13 @@ export const EmployeesTable = () => {
     getDataForInfinite(gridRef);
   }, []);
 
-  const defaultColDef = {
-    filter: "agTextColumnFilter",
-    floatingFilter: true,
-    editable: true,
-  };
+  function refreshTable() {
+    getDataForInfinite(gridRef);
+  }
 
+  function getSelectedRow() {
+    return gridRef.current.api.getSelectedRows()[0];
+  }
   function startEdit() {
     const selectedRows = gridRef.current.api.getSelectedNodes()[0];
     if (selectedRows) {
@@ -59,21 +67,13 @@ export const EmployeesTable = () => {
     }
   }
 
-  function stopEdit(refresh) {
+  function stopEdit(type = false) {
     setEdit(false);
-    gridRef.current.api.stopEditing();
-    if (refresh) {
-      refreshTable();
-    }
+
+    gridRef.current.api.stopEditing(type);
   }
 
-  function refreshTable() {
-    getDataForInfinite(gridRef);
-  }
-
-  function getSelectedRow() {
-    return gridRef.current.api.getSelectedRows()[0];
-  }
+  const editingRef = useRef(null);
 
   return (
     <>
@@ -124,11 +124,14 @@ export const EmployeesTable = () => {
         maxConcurrentDatasourceRequests={1}
         maxBlocksInCache={10}
         onGridReady={onGridReady}
-        // stopEditingWhenCellsLoseFocus
-        onRowEditingStopped={() => {
-          stopEdit(true);
+        onRowEditingStarted={(e) => {
+          editingRef.current = e.data;
         }}
-        suppressClickEdit
+        onRowEditingStopped={(e) => {
+          if (editingRef.current?.id) {
+            saveEdit(addToast, editingRef.current, stopEdit);
+          }
+        }}
       />
     </>
   );
