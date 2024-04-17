@@ -18,17 +18,17 @@ offset=integer
 
 Body:
 
-###### Для route = shops
+### Для route = shops
 
-### address: Varchar
+#### address: Varchar
 
-### budget: Numeric
+#### budget: Numeric
 
-### employees_number: Integer
+#### employees_number: Integer
 
-### opening_date: Date
+#### opening_date: Date
 
-###### Для route = employees
+### Для route = employees
 
 ##### name: Varchar
 
