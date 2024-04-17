@@ -28,7 +28,7 @@ database = organization
 
 Маршруты Api:
 
-- [APIROUTES.MD](APIROUTES.MD)
+- [APIROUTES.MD](https://github.com/Larkiz/npc-iris-test/blob/master/APIROUTES.md)
 
 ### 3. Клиент
 
