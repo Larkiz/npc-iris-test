@@ -21,15 +21,21 @@ Body:
 ###### Для route = shops
 
 address: Varchar
+
 budget: Numeric
+
 employees_number: Integer
+
 opening_date: Date
 
 ###### Для route = employees
 
 name: Varchar
+
 salary: Numeric
+
 employment_date: Date
+
 shop_id: Integer
 
 ## Put
@@ -37,6 +43,7 @@ shop_id: Integer
 ##### {host}/api/{route}/{id}
 
 Body:
+
 Поля для изменения
 
 ## delete
