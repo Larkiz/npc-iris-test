@@ -10,13 +10,13 @@
 
 В корне создать .env и прописать параметры бд:
 
-`user = postgres
+```user = postgres
 
 password = root
 
 host = localhost
 
-port = 5432`
+port = 5432```
 
 database = organization
 
