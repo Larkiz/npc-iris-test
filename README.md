@@ -8,17 +8,17 @@
 
 В терминале каталога сервера прописать npm install
 
-В корне создать .env и прописать параметры бд
+В корне создать .env и прописать параметры бд:
 
-##### user = postgres
+#### user = postgres
 
-##### password = root
+#### password = root
 
-##### host = localhost
+#### host = localhost
 
-##### port = 5432
+#### port = 5432
 
-##### database = organization
+#### database = organization
 
 Запустить:
 
