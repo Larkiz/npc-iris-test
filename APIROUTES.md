@@ -1,9 +1,9 @@
-## Маршруты сервера
+# Маршруты сервера
 
 ### host = localhost
 ### route = employees || shops
 
-#### Get
+## Get
 
 ##### {host}/api/route?
 
@@ -11,7 +11,7 @@ Params:
 offset=integer
 Если не указать offset, то вывод будет всей таблицы
 
-#### post
+## post
 
 ##### {host}/api/route
 
@@ -31,13 +31,13 @@ salary: Numeric
 employment_date: Date
 shop_id: Integer
 
-#### Put
+## Put
 
 ##### {host}/api/route/{id}
 
 Body:
 Поля для изменения
 
-#### delete
+## delete
 
 ##### {delete}/api/route/{id}
