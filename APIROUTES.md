@@ -1,7 +1,7 @@
 ## Маршруты сервера
 
-host = localhost
-route = employees || shops
+### host = localhost
+### route = employees || shops
 
 #### Get
 
