@@ -26,6 +26,10 @@ database = organization
 
 `npm start`
 
+Маршруты Api:
+
+- [APIROUTES.MD](APIROUTES.MD)
+
 ### 3. Клиент
 
 В терминале каталога клиента прописать `npm install`
