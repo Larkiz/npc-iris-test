@@ -18,10 +18,9 @@ password = root
 host = localhost
 
 port = 5432
-```
 
 database = organization
-
+```
 Запустить:
 
 `npm start`
