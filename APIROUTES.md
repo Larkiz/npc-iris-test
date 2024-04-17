@@ -9,6 +9,7 @@
 
 Params:
 offset=integer
+
 Если не указать offset, то вывод будет всей таблицы
 
 ## post
