@@ -5,7 +5,7 @@
 
 ## Get
 
-##### {host}/api/route?
+##### {host}/api/{route}?
 
 Params:
 offset=integer
@@ -13,7 +13,7 @@ offset=integer
 
 ## post
 
-##### {host}/api/route
+##### {host}/api/{route}
 
 Body:
 
@@ -33,11 +33,11 @@ shop_id: Integer
 
 ## Put
 
-##### {host}/api/route/{id}
+##### {host}/api/{route}/{id}
 
 Body:
 Поля для изменения
 
 ## delete
 
-##### {delete}/api/route/{id}
+##### {delete}/api/{route}/{id}
