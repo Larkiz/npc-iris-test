@@ -20,23 +20,23 @@ Body:
 
 ###### Для route = shops
 
-address: Varchar
+### address: Varchar
 
-budget: Numeric
+### budget: Numeric
 
-employees_number: Integer
+### employees_number: Integer
 
-opening_date: Date
+### opening_date: Date
 
 ###### Для route = employees
 
-name: Varchar
+##### name: Varchar
 
-salary: Numeric
+##### salary: Numeric
 
-employment_date: Date
+##### employment_date: Date
 
-shop_id: Integer
+##### shop_id: Integer
 
 ## Put
 
