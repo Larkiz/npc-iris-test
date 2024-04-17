@@ -24,7 +24,7 @@ database = organization
 
 Запустить:
 
-#### npm start
+`npm start
 
 ### 3. Клиент
 
