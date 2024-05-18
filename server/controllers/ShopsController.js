@@ -1,40 +1,46 @@
+import { dataValidator } from "../functions/validator.js";
+
 import { ShopsModel } from "../models/ShopsModel.js";
+
+const shopsModel = new ShopsModel();
 
 export const ShopsController = {
   get: async (req, res) => {
     const offset = req.query.offset || null;
 
-    const data = await new ShopsModel().get(offset);
+    const data = await shopsModel.get(offset);
     return res.json(data);
   },
   post: async (req, res) => {
-    const newShop = new ShopsModel();
+    const data = req.body;
 
-    const { opening_date, address, budget, employees_number } = req.body;
-    newShop.data.opening_date = opening_date;
-    newShop.data.address = address;
-    newShop.data.budget = budget;
-    newShop.data.employees_number = employees_number;
     try {
-      const id = await newShop.insert();
-      return res.json({ insertedId: id });
+      const validator = dataValidator(shopsModel.columns, data);
+
+      if (validator === true) {
+        const id = await shopsModel.insert(data);
+        return res.json({ insertedId: id });
+      } else {
+        throw validator;
+      }
     } catch (error) {
       return res.status(422).send({ message: error });
     }
   },
   put: async (req, res) => {
-    const newData = req.body;
+    const data = req.body;
+    const id = req.params.id;
 
     try {
-      const data = await new ShopsModel().update(req.params.id, newData);
-      return res.json({ updatedId: data });
+      const updatedId = await shopsModel.update(id, data);
+      return res.json({ updatedId: updatedId });
     } catch (error) {
       return res.status(422).send({ message: error });
     }
   },
   delete: async (req, res) => {
     try {
-      const data = await new ShopsModel().delete(req.params.id);
+      const data = await shopsModel.delete(req.params.id);
       return res.json({ deleted: data });
     } catch (error) {
       return res.status(400).send({ message: error });
