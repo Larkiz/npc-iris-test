@@ -37,7 +37,7 @@ export class ShopsModel {
     const update =
       pgHelpers.update(newData, null, "shops") +
       ` where id = ${id} RETURNING id`;
-    console.log(update);
+
     try {
       const data = await db.one(update);
 

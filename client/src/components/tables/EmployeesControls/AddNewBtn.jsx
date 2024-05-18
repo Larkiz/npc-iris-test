@@ -1,30 +1,10 @@
-export const AddNewBtn = ({ addToast, handleSubmit, refreshTable }) => {
-  function addNew(value) {
-    fetch(`http://localhost:5000/api/employees`, {
-      method: "post",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(value),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message) throw data.message;
-        addToast(`Успешно добавлено под Id${data.insertedId}`, {
-          appearance: "success",
-        });
+import { addNew } from "../functions/tableControls";
 
-        refreshTable();
-      })
-      .catch((error) => {
-        addToast(error, { appearance: "error" });
-      });
-  }
-
+export const AddNewBtn = (props) => {
   return (
     <button
       className="btn-grid-control"
-      onClick={handleSubmit((value) => addNew(value))}
+      onClick={props.handleSubmit((value) => addNew({ value, ...props }))}
     >
       Добавить
     </button>

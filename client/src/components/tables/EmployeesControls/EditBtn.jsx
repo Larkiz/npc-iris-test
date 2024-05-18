@@ -1,15 +1,13 @@
-import { saveEdit } from "../functions/saveEdit";
+import { forwardRef } from "react";
+import { startEdit, stopEdit } from "../functions/tableControls.js";
 
-export const EditBtn = ({
-  addToast,
-  getSelectedRow,
-  stopEdit,
-  edit,
-  startEdit,
-}) => {
+export const EditBtn = forwardRef(({ gridRef, setEdit, edit }) => {
   if (!edit) {
     return (
-      <button className="btn-grid-control" onClick={() => startEdit()}>
+      <button
+        className="btn-grid-control"
+        onClick={() => startEdit({ gridRef, setEdit })}
+      >
         Изменить
       </button>
     );
@@ -19,7 +17,7 @@ export const EditBtn = ({
         <button
           className="btn-grid-control"
           onClick={() => {
-            stopEdit();
+            stopEdit(gridRef, setEdit);
           }}
         >
           Сохранить
@@ -27,7 +25,7 @@ export const EditBtn = ({
         <button
           className="btn-grid-control"
           onClick={() => {
-            stopEdit(true);
+            stopEdit(gridRef, setEdit, true);
           }}
         >
           Отменить
@@ -35,4 +33,4 @@ export const EditBtn = ({
       </>
     );
   }
-};
+});

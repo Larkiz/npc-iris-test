@@ -23,7 +23,7 @@ import { Nav } from "reactstrap";
 function Sidebar(props) {
   const location = useLocation();
   const sidebar = useRef();
-  // verifies if routeName is the one active (in browser input)
+
   const activeRoute = (routeName) => {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };

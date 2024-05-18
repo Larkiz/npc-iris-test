@@ -6,7 +6,7 @@ import { useToasts } from "react-toast-notifications";
 import { AddNewBtn } from "./EmployeesControls/AddNewBtn.jsx";
 import { DeleteRowBtn } from "./EmployeesControls/DeleteRowBtn";
 import { EditBtn } from "./EmployeesControls/EditBtn";
-import { saveEdit } from "./functions/saveEdit";
+import { saveEdit } from "./functions/tableControls";
 
 const defaultColDef = {
   filter: "agTextColumnFilter",
@@ -53,42 +53,25 @@ export const EmployeesTable = () => {
     getDataForInfinite(gridRef);
   }
 
-  function getSelectedRow() {
-    return gridRef.current.api.getSelectedRows()[0];
-  }
-  function startEdit() {
-    const selectedRows = gridRef.current.api.getSelectedNodes()[0];
-    if (selectedRows) {
-      setEdit(true);
-      gridRef.current.api.startEditingCell({
-        rowIndex: selectedRows.rowIndex,
-        colKey: "id",
-      });
-    }
-  }
-
-  function stopEdit(type = false) {
-    setEdit(false);
-
-    gridRef.current.api.stopEditing(type);
-  }
-
   const editingRef = useRef(null);
+
+  function stopEdit() {
+    setEdit(false);
+  }
 
   return (
     <>
       <div>
         <EditBtn
           addToast={addToast}
-          getSelectedRow={getSelectedRow}
-          startEdit={startEdit}
-          stopEdit={stopEdit}
+          gridRef={gridRef}
+          editStarted={() => setEdit(true)}
           edit={edit}
         />
         <DeleteRowBtn
+          gridRef={gridRef}
           addToast={addToast}
           refreshTable={refreshTable}
-          getSelectedRow={getSelectedRow}
         />
 
         <div className="grid-add-new">
@@ -127,7 +110,7 @@ export const EmployeesTable = () => {
         onRowEditingStarted={(e) => {
           editingRef.current = e.data;
         }}
-        onRowEditingStopped={(e) => {
+        onRowEditingStopped={() => {
           if (editingRef.current?.id) {
             saveEdit(addToast, editingRef.current, stopEdit);
           }
